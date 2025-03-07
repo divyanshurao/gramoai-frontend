@@ -16,7 +16,7 @@ const Home = () => {
               onClick={() => console.log("Get Started Clicked")}
               className="bg-[#121826] text-white px-8 py-2 rounded-md text-base"
             >
-              Get Started
+              Get Startedddddddddddddd
             </button>
         </div>
       </div>
