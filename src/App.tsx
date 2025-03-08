@@ -1,14 +1,21 @@
 import React from 'react';
 import './App.css'
-import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
-import Home from './pages/Home';
+
+import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { MantineProvider } from "@mantine/core";
+import Home from "./pages/Home";
+import InputForm from "./pages/inputForm";
+
 const App: React.FC = () => {
   return (
-    <Router>
+    <MantineProvider>
+        <BrowserRouter>
       <Routes>
         <Route path="/" element={<Home />} />
+        <Route path="/input" element={<InputForm />} />
       </Routes>
-    </Router>
+      </BrowserRouter>
+  </MantineProvider>
   );
 };
 
