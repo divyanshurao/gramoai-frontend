@@ -1,7 +1,7 @@
 import React from "react";
 import Navbar from "./../../components/navbar";
 import { useNavigate } from "react-router-dom";
-
+import { initiateLinkedInOAuth } from "./../../api/linkedinOauth";
 const Home = () => {
   const navigate = useNavigate();
   return (
@@ -13,10 +13,10 @@ const Home = () => {
             Get a content calendar tailored for your LinkedIn audience.
           </h1>
           <button
-              onClick={() => navigate("/input")}
+              onClick={initiateLinkedInOAuth}
               className="bg-[#121826] text-white px-8 py-2 rounded-md text-base"
             >
-              Get Startedddddddddddddd
+              Get Started
             </button>
         </div>
       </div>

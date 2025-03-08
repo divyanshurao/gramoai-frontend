@@ -2,7 +2,8 @@ import React, { useState } from "react";
 import Navbar from "./../../components/navbar";
 import { Button, Text } from "@mantine/core";
 import { Input, Select } from "@mantine/core";
-
+import LoadingPage from "./../../components/LoadingPage";
+import toast, { Toaster } from "react-hot-toast";
 const InputForm = () => {
     const [formValues, setFormValues] = useState({
         fullName: "",
@@ -26,6 +27,8 @@ const InputForm = () => {
         additionalInfo: ""
     });
 
+    const [isLoading, setIsLoading] = useState(false);
+
     const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
         const { name, value } = e.target;
         setFormValues(prev => ({ ...prev, [name]: value }));
@@ -35,16 +38,54 @@ const InputForm = () => {
             setErrors(prev => ({ ...prev, [name]: "" }));
         }
     };
-
-    const handleSubmit = (e: React.FormEvent) => {
+    const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
-        console.log("Form submitted:", formValues);
+        
+        const requiredFields = ['fullName', 'linkedinUrl', 'companyWebsite', 'productProblem', 'targetAudience', 'contentStyle', 'careerJourney'];
+        const newErrors = { ...errors };
+        let hasError = false;
+        
+        requiredFields.forEach(field => {
+            if (!formValues[field as keyof typeof formValues]) {
+                newErrors[field as keyof typeof errors] = "This field is required";
+                hasError = true;
+            }
+        });
+        
+        if (hasError) {
+            setErrors(newErrors);
+            return;
+        }
+        
+        setIsLoading(true);
+        
+        try {
+            await new Promise(resolve => setTimeout(resolve, 3000));
+            
+            console.log("Form submitted:", formValues);
+            toast.success("Your content calendar has been generated.");
+
+            setIsLoading(false);
+        } catch (error) {
+            console.error("Error submitting form:", error);
+            
+            // Show error message
+            toast.error( "Failed to generate content calendar. Please try again.");
+            
+            // Reset loading state
+            setIsLoading(false);
+        }
     };
+
+    // If loading, show loading page
+    if (isLoading) {
+        return <LoadingPage />;
+    }
 
     return (
         <div className="min-h-screen bg-white overflow-hidden">
             <Navbar />
-            <div className="w-1/3 mx-auto px-4 pt-16 pb-20">
+            <div className="w-2/5 mx-auto px-4 pt-16 pb-20">
                 <div className="bg-white shadow-md rounded-md border border-gray-200 p-8 mt-8">
                     <div className="mb-4">
                         <Text fw={400} className="mb-2">Share details about your profile:</Text>
@@ -61,10 +102,10 @@ const InputForm = () => {
                                     Full Name
                                 </Input.Label>
                                 <textarea
-                                id="userName"
-                                name="userName"
+                                id="fullName"
+                                name="fullName"
                                 placeholder=""
-                                value={formValues.contentStyle}
+                                value={formValues.fullName}
                                 onChange={handleChange}
                                 rows={1}
                                 className={`w-full rounded-md border border-input bg-background px-3 py-2 text-base ${
@@ -84,10 +125,10 @@ const InputForm = () => {
                                     LinkedIn URL
                                 </Input.Label>
                                 <textarea
-                                id="contentStyle"
-                                name="contentStyle"
+                                id="linkedinUrl"
+                                name="linkedinUrl"
                                 placeholder=""
-                                value={formValues.contentStyle}
+                                value={formValues.linkedinUrl}
                                 onChange={handleChange}
                                 rows={1}
                                 className={`w-full rounded-md border border-input bg-background px-3 py-2 text-base ${
@@ -112,7 +153,7 @@ const InputForm = () => {
                                 id="companyWebsite"
                                 name="companyWebsite"
                                 placeholder=""
-                                value={formValues.contentStyle}
+                                value={formValues.companyWebsite}
                                 onChange={handleChange}
                                 rows={1}
                                 className={`w-full rounded-md border border-input bg-background px-3 py-2 text-base ${
@@ -133,10 +174,10 @@ const InputForm = () => {
                                     Target Audience
                                 </Input.Label>
                                 <textarea
-                                id="contentStyle"
-                                name="contentStyle"
+                                id="targetAudience"
+                                name="targetAudience"
                                 placeholder="e.g. Small business owners"
-                                value={formValues.contentStyle}
+                                value={formValues.targetAudience}
                                 onChange={handleChange}
                                 rows={1}
                                 className={`w-full rounded-md border border-input bg-background px-3 py-2 text-base ${
@@ -158,10 +199,10 @@ const InputForm = () => {
                                 What problem does your product/service solve?
                             </Input.Label>
                             <textarea
-                                id="contentStyle"
-                                name="contentStyle"
+                                id="productProblem"
+                                name="productProblem"
                                 placeholder="Describe the problem your product solves"
-                                value={formValues.contentStyle}
+                                value={formValues.productProblem}
                                 onChange={handleChange}
                                 rows={1}
                                 className={`w-full rounded-md border border-input bg-background px-3 py-2 text-base ${
@@ -230,10 +271,10 @@ const InputForm = () => {
                                 Anything else we should take care of?
                             </Input.Label>
                             <textarea
-                                id="contentStyle"
-                                name="contentStyle"
+                                id="additionalInfo"
+                                name="additionalInfo"
                                 placeholder=""
-                                value={formValues.contentStyle}
+                                value={formValues.additionalInfo}
                                 onChange={handleChange}
                                 rows={1}
                                 className={`w-full rounded-md border border-input bg-background px-3 py-2 text-base ${
@@ -249,6 +290,7 @@ const InputForm = () => {
                             <Button 
                                 type="submit"
                                 className="bg-[#121826] text-white px-8 py-2 rounded-md"
+                                disabled={isLoading}
                             >
                                 Generate Content Calendar
                             </Button>
