@@ -4,6 +4,7 @@ import { Button, Text } from "@mantine/core";
 import { Input, Select } from "@mantine/core";
 import LoadingPage from "./../../components/LoadingPage";
 import toast, { Toaster } from "react-hot-toast";
+import {generatePosts} from "./../../api/generatePosts";
 const InputForm = () => {
     const [formValues, setFormValues] = useState({
         fullName: "",
@@ -291,6 +292,7 @@ const InputForm = () => {
                                 type="submit"
                                 className="bg-[#121826] text-white px-8 py-2 rounded-md"
                                 disabled={isLoading}
+                                onClick={generatePosts}
                             >
                                 Generate Content Calendar
                             </Button>
