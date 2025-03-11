@@ -170,4 +170,3 @@ export const publishPost = async (postId: string) => {
         }
     }
 };
-  

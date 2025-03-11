@@ -15,6 +15,7 @@ interface CalendarCardProps {
 }
 
 const CalendarCard = ({ postId, title, content, status, scheduledAt, onContentUpdate }: CalendarCardProps) => {
+
   const [isContentModalOpen, setIsContentModalOpen] = useState(false);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [isScheduleModalOpen, setIsScheduleModalOpen] = useState(false);
@@ -181,7 +182,6 @@ const CalendarCard = ({ postId, title, content, status, scheduledAt, onContentUp
         onClose={() => setIsScheduleModalOpen(false)}
         onSave={handleScheduleSave}
       />
-
     <Toaster position={"bottom-right"}/>
     </div>
   );

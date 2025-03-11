@@ -290,6 +290,7 @@ const InputForm = () => {
                                 type="submit"
                                 className="bg-[#121826] text-white px-8 py-2 rounded-md"
                                 disabled={isLoading}
+                                onClick={generatePosts}
                             >
                                 Generate Content Calendar
                             </Button>
