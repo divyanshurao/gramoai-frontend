@@ -1,3 +1,14 @@
+@import url('https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@400;700&family=Inter:wght@400;700&display=swap');
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+@layer utilities {
+    .font-primary {
+      font-family: 'Bricolage Grotesque', sans-serif;
+    }
+    .font-secondary {
+        font-family: 'Inter', sans-serif;
+    }
+}
