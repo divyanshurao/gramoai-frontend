@@ -6,7 +6,7 @@ function getCookie(name: string): string | null {
 }
 
 export const CONFIG = {
-  BASE_URL: "http://localhost:8001",
+  BASE_URL: "https://api.gramo.ai",
   ENDPOINTS: {
     AUTH: {
       LINKEDIN: "/public/api/oauth/linkedin",
