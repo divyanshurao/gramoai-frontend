@@ -290,7 +290,7 @@ const InputForm = () => {
                                 type="submit"
                                 className="bg-[#121826] text-white px-8 py-2 rounded-md"
                                 disabled={isLoading}
-                                onClick={generatePosts}
+                                onClick={async() => await generatePosts(formValues.product, formValues.audience, formValues.contentStyle, formValues.journey, formValues.other)}
                             >
                                 Generate Content Calendar
                             </Button>
