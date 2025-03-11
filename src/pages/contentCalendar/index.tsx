@@ -5,8 +5,10 @@ import { getPosts } from "../../api/posts";
 
 const ContentCalendar = () => {
   interface Post {
+    id: string;
     title: string;
     content: string;
+    status:string;
     scheduledAt: string;
   }
   
@@ -31,7 +33,7 @@ const ContentCalendar = () => {
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-6 p-10">
         {posts.map((post, index) => (
-          <CalendarCard key={index} title={post.title} content={post.content} scheduledAt={post.scheduledAt}/>
+          <CalendarCard key={index} postId={post.id} title={post.title} content={post.content} status={post.status} scheduledAt={post.scheduledAt}/>
         ))}
       </div>
     </div>

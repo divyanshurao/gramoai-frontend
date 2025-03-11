@@ -1,6 +1,9 @@
 import React, { useState, useEffect, useRef } from "react";
+import toast, { Toaster } from "react-hot-toast";
+import { regeneratePost, updatePost } from "../../api/posts";
 
 interface ModalProps {
+  postId: string;
   isOpen: boolean;
   onClose: () => void;
   onSave: (settings: ContentSettings, editedContent: string) => void;
@@ -20,6 +23,7 @@ export interface ContentSettings {
 }
 
 const ContentModal: React.FC<ModalProps> = ({ 
+  postId,
   isOpen, 
   onClose, 
   onSave, 
@@ -52,11 +56,38 @@ const ContentModal: React.FC<ModalProps> = ({
     }
   }, [isOpen, initialContent, modalType]);
 
-  const handleSave = () => {
+  const handleSave = async (postId: string) => {
     localStorage.setItem("contentSettings", JSON.stringify(settings));
     onSave(settings, editedContent);
-    onClose();
-  };
+    
+        try {
+                
+          const res = await regeneratePost(postId, editedContent)          
+          console.log(res)
+
+          setEditedContent(res.content)
+
+          try {
+            const updateRes = await updatePost(postId, res.content)
+
+            toast.success("post updated")
+
+            onClose()
+
+          } catch (error){
+            console.error("Error updating regenerration:", error);
+          
+          // Show error message
+          toast.error( "Failed to upadate post. Please try again."); 
+          }
+    
+      } catch (error) {
+          console.error("Error submitting form:", error);
+          
+          // Show error message
+          toast.error( "Failed to generate content calendar. Please try again.");
+    };
+    }
 
   const handleChange = (field: keyof ContentSettings, value: string) => {
     setSettings((prev) => ({ ...prev, [field]: value }));
@@ -67,8 +98,8 @@ const ContentModal: React.FC<ModalProps> = ({
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
       <div className="bg-white rounded-xl p-6 w-full max-w-6xl max-h-[90vh] flex">
-        {/* Content Editor - Left Side (40%) */}
-        <div className="w-2/5 pr-6 flex flex-col">
+        <Toaster position={"bottom-right"}/>
+        <div className="w-2/3 pr-6 flex flex-col">
           <div className="mb-6 flex-grow">
             <label className="block mb-2 font-medium">Content</label>
             <textarea
@@ -181,7 +212,7 @@ const ContentModal: React.FC<ModalProps> = ({
           <div className="mt-6 flex justify-end">
             <button
               className="bg-gray-900 text-white py-2 px-6 rounded-lg hover:bg-gray-800 transition"
-              onClick={handleSave}
+              onClick={async () => await handleSave(postId)}
             >
               {modalType === "edit" ? "Save" : "Re-generate"}
             </button>

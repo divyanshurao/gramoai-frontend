@@ -1,11 +1,15 @@
 import React, { useState, useEffect, useRef } from "react";
 import ContentModal from "./RegenerateModal"; // Import the ContentModal component
+import { updatePost } from "../../api/posts";
+import toast, { Toaster } from "react-hot-toast";
+
 
 interface ModalProps {
   isOpen: boolean;
   onClose: () => void;
   onSave: (settings: ContentSettings, editedContent: string) => void;
   initialContent: string;
+  postId: string;
 }
 
 export interface ContentSettings {
@@ -19,6 +23,7 @@ export interface ContentSettings {
 }
 
 const EditModal: React.FC<ModalProps> = ({ 
+  postId,
   isOpen, 
   onClose, 
   onSave, 
@@ -51,10 +56,24 @@ const EditModal: React.FC<ModalProps> = ({
     }
   }, [isOpen, initialContent]);
 
-  const handleSave = () => {
+  const handleSave = async (postId: string) => {
     localStorage.setItem("contentSettings", JSON.stringify(settings));
     onSave(settings, editedContent);
+
+    try {
+            
+      const res = await updatePost(postId, editedContent)
+
+      toast.success("post updated")
     onClose();
+
+
+  } catch (error) {
+      console.error("Error submitting form:", error);
+      
+      // Show error message
+      toast.error( "Failed to generate content calendar. Please try again.");
+  }
   };
 
   const handleChange = (field: keyof ContentSettings, value: string) => {
@@ -69,6 +88,7 @@ const EditModal: React.FC<ModalProps> = ({
 
   return (
     <>
+    <Toaster position={"bottom-right"}/>
       <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
         <div className="bg-white rounded-xl p-6 w-full max-w-6xl max-h-[90vh] flex">
           {/* Content Editor - Left Side (40%) */}
@@ -99,12 +119,12 @@ const EditModal: React.FC<ModalProps> = ({
               >
                 Regenerate
               </button>
-              <button 
+                <button 
                 className="bg-indigo-600 text-white p-2 rounded-lg border border-gray-300 hover:bg-gray-50 transition flex items-center justify-center"
-                onClick={handleSave}
-              >
+                onClick={async () => await handleSave(postId)}
+                >
                 Save
-              </button>
+                </button>
             </div>
           </div>
         </div>
@@ -113,6 +133,7 @@ const EditModal: React.FC<ModalProps> = ({
       {/* ContentModal */}
       {isContentModalOpen && (
         <ContentModal
+        postId={postId}
           isOpen={isContentModalOpen}
           onClose={() => setIsContentModalOpen(false)} // Close ContentModal
           onSave={(settings, content) => {
