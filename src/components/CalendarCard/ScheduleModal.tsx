@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
-
+import { schedulePost } from "../../api/posts";
 interface ScheduleModalProps {
+  postId: string,
   scheduledAt?: string;
   isOpen: boolean;
   onClose: () => void;
@@ -10,6 +11,7 @@ interface ScheduleModalProps {
 }
 
 const ScheduleModal: React.FC<ScheduleModalProps> = ({
+  postId,
   isOpen,
   onClose,
   onSave,
@@ -29,9 +31,23 @@ const ScheduleModal: React.FC<ScheduleModalProps> = ({
     }
   }, [isOpen, scheduledAt]);
 
-  const handleSave = () => {
-    onSave(date, time);
-    onClose();
+  const handleSave = async () => {
+    if (!date || !time) {
+      alert("Please select a date and time.");
+      return;
+    }
+  
+    const scheduledAt = new Date(`${date}T${time}:00Z`).toISOString();
+  
+    console.log("Scheduling post at:", scheduledAt);
+  
+    try {
+      await schedulePost(postId, scheduledAt);
+      onSave(date, time);
+      onClose();
+    } catch (error) {
+      console.error("Failed to schedule post:", error);
+    }
   };
 
   if (!isOpen) return null;
