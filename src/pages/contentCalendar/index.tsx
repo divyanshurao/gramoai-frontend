@@ -11,16 +11,21 @@ const ContentCalendar = () => {
     status:string;
     scheduledAt: string;
   }
-  
   const [posts, setPosts] = useState<Post[]>([]);
 
   useEffect(() => {
     const fetchPosts = async () => {
       try {
-        const response = await getPosts();
+        const response = await getPosts(); // Pass token if needed
         setPosts(response);
-      } catch (error) {
+      } catch (error: any) {
         console.error("Failed to fetch posts:", error);
+        if (error.response?.status === 401) {
+          console.error("Token expired or invalid. Redirecting to login...");
+          // Handle token expiration (e.g., clear token and redirect)
+          localStorage.removeItem("token");
+          window.location.href = "/login";
+        }
       }
     };
 
@@ -32,8 +37,15 @@ const ContentCalendar = () => {
       <Navbar />
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-6 p-10">
-        {posts.map((post, index) => (
-          <CalendarCard key={index} postId={post.id} title={post.title} content={post.content} status={post.status} scheduledAt={post.scheduledAt}/>
+        {posts.map((post) => (
+          <CalendarCard
+            key={post.id}
+            postId={post.id}
+            title={post.title}
+            content={post.content}
+            status={post.status}
+            scheduledAt={post.scheduledAt}
+          />
         ))}
       </div>
     </div>

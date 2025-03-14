@@ -177,6 +177,7 @@ const CalendarCard = ({ postId, title, content, status, scheduledAt, onContentUp
 
       {/* Schedule Modal */}
       <ScheduleModal
+        postId={postId}
         scheduledAt={scheduledAt}
         isOpen={isScheduleModalOpen}
         onClose={() => setIsScheduleModalOpen(false)}
