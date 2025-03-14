@@ -4,28 +4,25 @@ import { Button, Text } from "@mantine/core";
 import { Input, Select } from "@mantine/core";
 import LoadingPage from "./../../components/LoadingPage";
 import toast, { Toaster } from "react-hot-toast";
-import {generatePosts} from "./../../api/generatePosts";
+import { generatePosts } from "../../api/posts";
+import { useNavigate } from "react-router-dom";
 const InputForm = () => {
+
+    const navigate = useNavigate();
     const [formValues, setFormValues] = useState({
-        fullName: "",
-        linkedinUrl: "",
-        companyWebsite: "",
-        productProblem: "",
-        targetAudience: "",
-        contentStyle: "",
-        careerJourney: "",
-        additionalInfo: ""
+        product: "Small Business Owners",
+        audience: "People in 18-35 age range",
+        contentStyle: "Professional",
+        journey: "Started Canva in sophomere year of college",
+        other: "with my batchmate"
     });
     
     const [errors, setErrors] = useState({
-        fullName: "",
-        linkedinUrl: "",
-        companyWebsite: "",
-        productProblem: "",
-        targetAudience: "",
+        product: "",
+        audience: "",
         contentStyle: "",
-        careerJourney: "",
-        additionalInfo: ""
+        journey: "",
+        other: ""
     });
 
     const [isLoading, setIsLoading] = useState(false);
@@ -42,7 +39,7 @@ const InputForm = () => {
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         
-        const requiredFields = ['fullName', 'linkedinUrl', 'companyWebsite', 'productProblem', 'targetAudience', 'contentStyle', 'careerJourney'];
+        const requiredFields = ['product', 'audience', 'contentStyle', 'journey'];
         const newErrors = { ...errors };
         let hasError = false;
         
@@ -61,12 +58,13 @@ const InputForm = () => {
         setIsLoading(true);
         
         try {
-            await new Promise(resolve => setTimeout(resolve, 3000));
             
-            console.log("Form submitted:", formValues);
+            const response = await generatePosts(formValues.product, formValues.audience, formValues.contentStyle, formValues.journey, formValues.other);         
             toast.success("Your content calendar has been generated.");
 
             setIsLoading(false);
+
+            navigate("/calendar")
         } catch (error) {
             console.error("Error submitting form:", error);
             
@@ -84,17 +82,17 @@ const InputForm = () => {
     }
 
     return (
-        <div className="min-h-screen bg-white overflow-hidden">
+        <div className="min-h-screen bg-white overflow-hidden font-primary">
             <Navbar />
-            <div className="w-2/5 mx-auto px-4 pt-16 pb-20">
+            <div className="w-2/5 mx-auto px-4 pt-6 pb-20">
                 <div className="bg-white shadow-md rounded-md border border-gray-200 p-8 mt-8">
                     <div className="mb-4">
-                        <Text fw={400} className="mb-2">Share details about your profile:</Text>
+                        <Text fw={400} className="mb-2">Share details about your profile</Text>
                     </div>
                     
                     <form onSubmit={handleSubmit}>
                         <div className="grid grid-cols-1 gap-4 mb-4">
-                            <div>
+                            {/* <div>
                                 <Input.Label
                                     htmlFor="fullName"
                                     required
@@ -164,46 +162,46 @@ const InputForm = () => {
                                 {errors.companyWebsite && (
                                     <span className="text-red-500 text-sm">{errors.companyWebsite}</span>
                                 )}
-                            </div>
+                            </div> */}
                             
                             <div>
                                 <Input.Label
-                                    htmlFor="targetAudience"
+                                    htmlFor="audience"
                                     required
                                     className="text-left font-inter mb-1 block font-medium"
                                 >
                                     Target Audience
                                 </Input.Label>
                                 <textarea
-                                id="targetAudience"
-                                name="targetAudience"
+                                id="audience"
+                                name="audience"
                                 placeholder="e.g. Small business owners"
-                                value={formValues.targetAudience}
+                                value={formValues.audience}
                                 onChange={handleChange}
                                 rows={1}
                                 className={`w-full rounded-md border border-input bg-background px-3 py-2 text-base ${
                                     errors.contentStyle ? "border-red-500 focus:border-red-500" : ""
                                 }`}
                             />
-                                {errors.targetAudience && (
-                                    <span className="text-red-500 text-sm">{errors.targetAudience}</span>
+                                {errors.audience && (
+                                    <span className="text-red-500 text-sm">{errors.audience}</span>
                                 )}
                             </div>
                         </div>
                         
                         <div className="mb-4">
                             <Input.Label
-                                htmlFor="productProblem"
+                                htmlFor="product"
                                 required
                                 className="text-left font-inter mb-1 block font-medium"
                             >
                                 What problem does your product/service solve?
                             </Input.Label>
                             <textarea
-                                id="productProblem"
-                                name="productProblem"
+                                id="product"
+                                name="product"
                                 placeholder="Describe the problem your product solves"
-                                value={formValues.productProblem}
+                                value={formValues.product}
                                 onChange={handleChange}
                                 rows={1}
                                 className={`w-full rounded-md border border-input bg-background px-3 py-2 text-base ${
@@ -211,8 +209,8 @@ const InputForm = () => {
                                 }`}
                             />
                             
-                            {errors.productProblem && (
-                                <span className="text-red-500 text-sm">{errors.productProblem}</span>
+                            {errors.product && (
+                                <span className="text-red-500 text-sm">{errors.product}</span>
                             )}
                         </div>
                         
@@ -242,48 +240,48 @@ const InputForm = () => {
                         
                         <div className="mb-4">
                             <Input.Label
-                                htmlFor="careerJourney"
+                                htmlFor="journey"
                                 required
                                 className="text-left font-inter mb-1 block font-medium"
                             >
                                 Share your career journey and key lessons learned
                             </Input.Label>
                             <textarea
-                                id="careerJourney"
-                                name="careerJourney"
+                                id="journey"
+                                name="journey"
                                 placeholder="Describe your career path and important lessons"
-                                value={formValues.careerJourney}
+                                value={formValues.journey}
                                 onChange={handleChange}
                                 rows={3}
                                 className={`w-full rounded-md border border-input bg-background px-3 py-2 text-base ${
-                                    errors.careerJourney ? "border-red-500 focus:border-red-500" : ""
+                                    errors.journey ? "border-red-500 focus:border-red-500" : ""
                                 }`}
                             />
-                            {errors.careerJourney && (
-                                <span className="text-red-500 text-sm">{errors.careerJourney}</span>
+                            {errors.journey && (
+                                <span className="text-red-500 text-sm">{errors.journey}</span>
                             )}
                         </div>
                         
                         <div className="mb-6">
                             <Input.Label
-                                htmlFor="additionalInfo"
+                                htmlFor="other"
                                 className="text-left font-inter mb-1 block font-medium"
                             >
                                 Anything else we should take care of?
                             </Input.Label>
                             <textarea
-                                id="additionalInfo"
-                                name="additionalInfo"
+                                id="other"
+                                name="other"
                                 placeholder=""
-                                value={formValues.additionalInfo}
+                                value={formValues.other}
                                 onChange={handleChange}
                                 rows={1}
                                 className={`w-full rounded-md border border-input bg-background px-3 py-2 text-base ${
                                     errors.contentStyle ? "border-red-500 focus:border-red-500" : ""
                                 }`}
                             />
-                            {errors.additionalInfo && (
-                                <span className="text-red-500 text-sm">{errors.additionalInfo}</span>
+                            {errors.other && (
+                                <span className="text-red-500 text-sm">{errors.other}</span>
                             )}
                         </div>
                         
@@ -292,12 +290,13 @@ const InputForm = () => {
                                 type="submit"
                                 className="bg-[#121826] text-white px-8 py-2 rounded-md"
                                 disabled={isLoading}
-                                onClick={generatePosts}
+                                onClick={async() => await generatePosts(formValues.product, formValues.audience, formValues.contentStyle, formValues.journey, formValues.other)}
                             >
                                 Generate Content Calendar
                             </Button>
                         </div>
                     </form>
+                    <Toaster position={"bottom-right"}/>
                 </div>
             </div>
         </div>
