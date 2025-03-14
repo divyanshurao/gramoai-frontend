@@ -2,6 +2,7 @@
 import React, { useState } from 'react';
 import { Linkedin } from 'lucide-react';
 import Navbar from '../../components/navbar';
+import HeroImg from '../../assets/hero.png'
 
 const Home: React.FC = () => {
   const [activeView, setActiveView] = useState('dashboard');
@@ -59,7 +60,7 @@ const Home: React.FC = () => {
             <div className="absolute inset-0 bg-[#5753f2]/10 rounded-lg transform rotate-3"></div>
             <div className="relative bg-white p-4 rounded-lg shadow-xl">
               <img 
-                src="https://www.shutterstock.com/image-vector/image-photo-placeholder-no-thumbnail-260nw-2502908919.jpg" 
+                src={HeroImg} 
                 alt="Dashboard preview" 
                 className="rounded-lg shadow-sm" 
               />
