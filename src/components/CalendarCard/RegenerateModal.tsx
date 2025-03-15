@@ -69,9 +69,8 @@ const ContentModal: React.FC<ModalProps> = ({
 
           try {
             const updateRes = await updatePost(postId, res.content)
-
-            toast.success("post updated")
-
+            toast.success("Post Regenerated");
+            onSave(settings, res.content);
             onClose()
 
           } catch (error){

@@ -2,11 +2,16 @@
 import React, { useState } from 'react';
 import { Linkedin } from 'lucide-react';
 import Navbar from '../../components/navbar';
+import Footer from '../../components/footer';
 import HeroImg from '../../assets/hero.png'
+import { initiateLinkedInOAuth } from "../../api/linkedinOauth";
 
 const Home: React.FC = () => {
   const [activeView, setActiveView] = useState('dashboard');
-  
+  const handleLinkedinConnect = async () => {
+      const url = await initiateLinkedInOAuth();
+      window.open(url, "_blank");
+    };
   const accounts = [
     { id: 1, name: 'Twitter', connected: true, icon: 'twitter', color: 'bg-blue-400' },
     { id: 2, name: 'LinkedIn', connected: true, icon: 'linkedin', color: 'bg-blue-700' },
@@ -43,8 +48,8 @@ const Home: React.FC = () => {
             <p className="text-lg text-gray-600 mb-8">
               Connect multiple social accounts, schedule content, and let AI generate engaging posts — all from one powerful dashboard.
             </p>
-            <div className="flex flex-col sm:flex-row space-y-3 sm:space-y-0 sm:space-x-4">
-              <button className="flex px-6 py-3 text-base font-medium rounded-lg text-white bg-[#5753f2] hover:bg-[#4542e0] transition-colors">
+            <div className="flex flex-col sm:flex-row space-y-3 sm:space-y-0 sm:space-x-4"> 
+              <button className="flex px-6 py-3 text-base font-medium rounded-lg text-white bg-[#5753f2] hover:bg-[#4542e0] transition-colors" onClick={handleLinkedinConnect}>
                 <Linkedin size={20} fill='white' className='mr-4'/>
                 Connect Linkedin
               </button>
@@ -378,7 +383,9 @@ const Home: React.FC = () => {
              </div> */}
              {/* </div> */}
              {/* </div> */}
+             <Footer/>
              </div>
+             
   )
 };
 

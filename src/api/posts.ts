@@ -46,6 +46,8 @@ export const generatePosts = async (product: string, audience: string, contentSt
 
 export const regeneratePost = async (postId: string, content: string) => {
     try {
+        const authToken =  getAuthToken();
+        if(!authToken) throw new Error("Auth tojken not found in cookies");
         const response = await api.post(
             CONFIG.ENDPOINTS.POST.REGENERATE_POST_BY_ID(postId),
             {
@@ -53,18 +55,10 @@ export const regeneratePost = async (postId: string, content: string) => {
             },
             {
                 headers: {
-                    Authorization: `Bearer ${CONFIG.AUTH_TOKEN}`
+                    Authorization: `Bearer ${authToken}`
                 }
             }
         );
-        const authToken = CONFIG.AUTH_TOKEN;
-        console.log(authToken);
-        if (authToken) {
-            console.log(authToken);
-            CONFIG.AUTH_TOKEN = authToken;
-        } else {
-            throw new Error('Auth token not found in cookies');
-        }
         const res = response.data.data;
         console.log()
         return res;
@@ -105,6 +99,8 @@ export const getPosts = async () => {
 
 export const updatePost = async (postId: string, content: string) => {
     try {
+        const authToken = getAuthToken();
+        if (!authToken) throw new Error("Auth token not found in cookies");
         const response = await api.put(
             CONFIG.ENDPOINTS.POST.UPDATE_POST_BY_ID(postId),
             {
@@ -112,18 +108,10 @@ export const updatePost = async (postId: string, content: string) => {
             },
             {
                 headers: {
-                    Authorization: `Bearer ${CONFIG.AUTH_TOKEN}`
+                    Authorization: `Bearer ${authToken}`
                 }
             }
         );
-        const authToken = CONFIG.AUTH_TOKEN;
-        console.log(authToken);
-        if (authToken) {
-            console.log(authToken);
-            CONFIG.AUTH_TOKEN = authToken;
-        } else {
-            throw new Error('Auth token not found in cookies');
-        }
         const res = response.data.data;
         return res;
     } catch (error) {
@@ -164,11 +152,11 @@ export const publishPost = async (postId: string) => {
 };
 export const schedulePost = async (postId: string, date: string) => {
     try {
-        console.log("PUBLSIHING")
+        console.log("SCHEDULING")
         const authToken = getAuthToken();
         if (!authToken) throw new Error("Auth token not found in cookies");
         const response = await api.post(
-            CONFIG.ENDPOINTS.POST.PUBLISH_POST_BY_ID(postId),
+            CONFIG.ENDPOINTS.POST.UPDATE_POST_BY_ID(postId),
             {date},
             {
                 headers: {
