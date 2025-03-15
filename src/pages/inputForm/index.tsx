@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import Navbar from "./../../components/navbar";
+import Footer from "./../../components/footer";
 import { Button, Text } from "@mantine/core";
 import { Input, Select } from "@mantine/core";
 import LoadingPage from "./../../components/LoadingPage";
@@ -82,7 +83,7 @@ const InputForm = () => {
     }
 
     return (
-        <div className="min-h-screen bg-white overflow-hidden font-primary">
+        <div className="flex flex-col min-h-screen bg-white overflow-hidden font-primary">
             <Navbar />
             <div className="w-2/5 mx-auto px-4 pt-6 pb-20">
                 <div className="bg-white shadow-md rounded-md border border-gray-200 p-8 mt-8">
@@ -299,7 +300,9 @@ const InputForm = () => {
                     <Toaster position={"bottom-right"}/>
                 </div>
             </div>
+            <Footer/>
         </div>
+        
     );
 };
 

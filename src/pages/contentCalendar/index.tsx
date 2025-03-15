@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import CalendarCard from "./../../components/CalendarCard";
 import Navbar from "../../components/navbar";
+import Footer from "../../components/footer";
 import { getPosts } from "../../api/posts";
 
 const ContentCalendar = () => {
@@ -48,6 +49,7 @@ const ContentCalendar = () => {
           />
         ))}
       </div>
+      <Footer/>
     </div>
   );
 };

@@ -1,6 +1,7 @@
 import React from "react";
 import { Progress } from "@mantine/core"; // Mantine Progress component
 import Navbar from "./../navbar";
+import Footer from "./../footer";
 
 interface LoadingPageProps {
   message?: string;
@@ -20,6 +21,7 @@ const LoadingPage = ({
           <p className="text-center text-gray-600">{message}</p>
         </div>
       </div>
+      <Footer />
     </div>
   );
 };
